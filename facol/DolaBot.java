@@ -3,6 +3,7 @@ package facol;
 import robocode.*;
 //import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 /**
@@ -11,24 +12,20 @@ import java.util.ArrayList;
 public class DolaBot extends Robot {
     
     ArrayList<Enemy> enemies = new ArrayList();
+    String currentTaget = null;
 
     /**
      * run: DolaBot's default behavior
      */
     @Override
     public void run() {
-        // Initialization of the robot should be put here
-
-        // After trying out your robot, try uncommenting the import at the top,
-        // and the next line:
-        // setColors(Color.red,Color.blue,Color.green); // body,gun,radar
-        // Robot main loop
+        this.setAdjustGunForRobotTurn(true);
+        this.setAdjustRadarForGunTurn(true);
+        this.setAdjustRadarForRobotTurn(true);
+        
+        this.scanAll();        
         while (true) {
-            // Replace the next 4 lines with any behavior you would like
-            ahead(100);
-            turnGunRight(360);
-            back(100);
-            turnGunRight(360);
+            
         }
     }
 
@@ -58,6 +55,25 @@ public class DolaBot extends Robot {
     public void onHitWall(HitWallEvent e) {
         // Replace the next line with any behavior you would like
         back(20);
+    }
+    
+    @Override
+    public void onRobotDeath(RobotDeathEvent event){
+        this.removeEnemy(event);        
+    }
+    
+    private void removeEnemy(RobotDeathEvent event){        
+        for(int i =0;i<this.enemies.size();i++){
+            if(this.enemies.get(i).getName().equals(event.getName())){
+                this.enemies.remove(i);
+                break;
+            }
+        }
+    }
+    
+    
+    private void scanAll(){        
+        this.turnGunLeft(360);
     }
     
     private void updateEnemyList(ScannedRobotEvent e){
